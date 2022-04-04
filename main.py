@@ -57,7 +57,7 @@ breaks_list = [r",", r".", r"\-", r" ", r"\n"]
 nos_regex = '|'.join(nos_list)
 yous_regex = '|'.join(yous_list)
 breaks_regex = re.compile("[" + ''.join(breaks_list) + "]")
-clean_str_regex = re.compile("^(" + nos_regex + ")|(" + yous_regex + ")$")
+clean_str_regex = re.compile("^(" + nos_regex + ")(" + yous_regex + ")$")
 
 cat_url = 'https://some-random-api.ml/img/cat'
 
