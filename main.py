@@ -81,18 +81,18 @@ def normalize(text):
     return text
 
 
-def re_encode_normilize(strs):
+def re_encode_normalize(strs):
     return list(map(lambda x: "(" + re.escape(normalize(x)) + ")", strs))
 
 
-nous_list = re_encode_normilize(nous_list)
-nos_list = re_encode_normilize(nos_list)
-yous_list = re_encode_normilize(yous_list)
+nous_list = re_encode_normalize(nous_list)
+nos_list = re_encode_normalize(nos_list)
+yous_list = re_encode_normalize(yous_list)
 
 nous_regex = '|'.join(nous_list)
 nos_regex = '|'.join(nos_list)
 yous_regex = '|'.join(yous_list)
-clean_str_regex = re.compile("^((" + nos_regex + ")(" + yous_regex + "))|(" + nous_regex + ")$")
+clean_str_regex = re.compile("^(((" + nos_regex + ")(" + yous_regex + "))|(" + nous_regex + "))$")
 
 cat_url = 'https://some-random-api.ml/img/cat'
 
