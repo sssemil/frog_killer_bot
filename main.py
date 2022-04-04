@@ -63,7 +63,6 @@ cat_url = 'https://some-random-api.ml/img/cat'
 
 
 def is_nou(message_srt):
-    print("original: " + message_srt)
     # normalize string
     # lower case all
     message_srt = message_srt.lower()
@@ -77,7 +76,6 @@ def is_nou(message_srt):
             tmp_message_srt += c
             last_c = c
     message_srt = tmp_message_srt
-    print("normal: " + message_srt)
     # test with regex
     return clean_str_regex.match(message_srt) is not None
 
