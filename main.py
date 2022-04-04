@@ -51,31 +51,55 @@ foreign_shit_message_ids = dict()
 
 yasru_filter = re.compile('#я[сc][рp][уy]', re.IGNORECASE)
 
+nous_list = ["لاانت", "לא אתה"]
 nos_list = ["no", "nei", "nay", "nah", "nö", "nein", "нет", "nope", "nop", "nada", "nah", "yox", "heyir", "hayir"]
 yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen"]
-breaks_list = [r",", r".", r"\-", r" ", r"\n"]
+breaks_list = [",", ".", "-", " ", "\n"]
+
+
+def re_encode(strs):
+    return list(map(lambda x: "(" + re.escape(x) + ")", strs))
+
+
+breaks_list = re_encode(breaks_list)
+breaks_regex = re.compile("[" + ''.join(breaks_list) + "]")
+
+
+def normalize(text):
+    # lower case all
+    text = text.lower()
+    # remove the break chars
+    text = breaks_regex.sub("", text)
+    # collapse duplicates
+    tmp_message_srt = ""
+    last_c = ""
+    for c in text:
+        if c != last_c:
+            tmp_message_srt += c
+            last_c = c
+    text = tmp_message_srt
+    return text
+
+
+def re_encode_normilize(strs):
+    return list(map(lambda x: "(" + re.escape(normalize(x)) + ")", strs))
+
+
+nous_list = re_encode_normilize(nous_list)
+nos_list = re_encode_normilize(nos_list)
+yous_list = re_encode_normilize(yous_list)
+
+nous_regex = '|'.join(nous_list)
 nos_regex = '|'.join(nos_list)
 yous_regex = '|'.join(yous_list)
-breaks_regex = re.compile("[" + ''.join(breaks_list) + "]")
-clean_str_regex = re.compile("^(" + nos_regex + ")(" + yous_regex + ")$")
+clean_str_regex = re.compile("^((" + nos_regex + ")(" + yous_regex + "))|(" + nous_regex + ")$")
 
 cat_url = 'https://some-random-api.ml/img/cat'
 
 
 def is_nou(message_srt):
     # normalize string
-    # lower case all
-    message_srt = message_srt.lower()
-    # remove the break chars
-    message_srt = breaks_regex.sub("", message_srt)
-    # collapse duplicates
-    tmp_message_srt = ""
-    last_c = ""
-    for c in message_srt:
-        if c != last_c:
-            tmp_message_srt += c
-            last_c = c
-    message_srt = tmp_message_srt
+    message_srt = normalize(message_srt)
     # test with regex
     return clean_str_regex.match(message_srt) is not None
 
