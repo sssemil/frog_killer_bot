@@ -25,7 +25,8 @@ import time
 from random import random
 
 import requests
-from telethon import TelegramClient, events
+from telethon import TelegramClient
+from telethon import events
 from telethon.tl.types import Channel, User
 
 parser = argparse.ArgumentParser(description='Start the frog killer bot')
@@ -50,10 +51,35 @@ foreign_shit_message_ids = dict()
 
 yasru_filter = re.compile('#я[сc][рp][уy]', re.IGNORECASE)
 
-nou_filter = re.compile(
-    "^[ \n]*((n+)(o+)|(n+)(a+)(y+)|(n+)(o+)(p+)(e+)|(n+)(a+)(h+)|(n+)(a+)(d+)(a+)|(n+)(e+)(i+)(n+)|(n+)(e+)(i+)|(n+)(ö+)|(н+)(е+)(т*))[,.]*((u+)|(y+)(o+)(u+)|(y+)(e+)|thou|(d+)(u+)|(т+)(ы+))[!.]*$")
+nos_list = ["no", "nei", "nay", "nah", "nö", "nein", "нет", "nope", "nop", "nada", "nah", "yox", "heyir", "hayir"]
+yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen"]
+breaks_list = [r",", r".", r"\-", r" ", r"\n"]
+nos_regex = '|'.join(nos_list)
+yous_regex = '|'.join(yous_list)
+breaks_regex = re.compile("[" + ''.join(breaks_list) + "]")
+clean_str_regex = re.compile("^(" + nos_regex + ")|(" + yous_regex + ")$")
 
 cat_url = 'https://some-random-api.ml/img/cat'
+
+
+def is_nou(message_srt):
+    print("original: " + message_srt)
+    # normalize string
+    # lower case all
+    message_srt = message_srt.lower()
+    # remove the break chars
+    message_srt = breaks_regex.sub("", message_srt)
+    # collapse duplicates
+    tmp_message_srt = ""
+    last_c = ""
+    for c in message_srt:
+        if c != last_c:
+            tmp_message_srt += c
+            last_c = c
+    message_srt = tmp_message_srt
+    print("normal: " + message_srt)
+    # test with regex
+    return clean_str_regex.match(message_srt) is not None
 
 
 @user_client.on(events.MessageDeleted())
@@ -111,7 +137,7 @@ async def handler(event):
         os.remove(tmp_filename)
         os.remove(tmp_filename + ".mp4")
 
-    if nou_filter.match(event.message.message.lower().replace(" ", "").replace("\n", "")):
+    if is_nou(event.message.message):
         if cooldown():
             print("No u")
             await event.reply('No u')
