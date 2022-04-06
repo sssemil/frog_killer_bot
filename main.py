@@ -52,9 +52,10 @@ foreign_shit_message_ids = dict()
 yasru_filter = re.compile('#я[сc][рp][уy]', re.IGNORECASE)
 
 nous_list = ["لاانت", "לא אתה"]
-nos_list = ["no", "nei", "nay", "nah", "nö", "nein", "нет", "nope", "nop", "nada", "nah", "yox", "heyir", "hayir", "ba"]
+nos_list = ["n0", "no", "nei", "nay", "nah", "nö", "nein", "нет", "nope", "nop", "nada", "nah", "yox", "heyir", "hayir",
+            "ba"]
 yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu"]
-breaks_list = [",", ".", "-", " ", "\n"]
+breaks_list = [",", ".", "-", " ", "\n", "!", "?", "\"", "\'", ";", ":", "_"]
 
 
 def re_encode(strs):
