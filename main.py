@@ -29,11 +29,11 @@ from telethon import TelegramClient
 from telethon import events
 from telethon.tl.types import Channel, User
 
-parser = argparse.ArgumentParser(description='Start the frog killer bot')
-parser.add_argument('--api_id', metavar='api_id', required=True,
-                    help='Telegram API ID')
-parser.add_argument('--api_hash', metavar='api_hash', required=True,
-                    help='Telegram API hash')
+parser = argparse.ArgumentParser(description="Start the frog killer bot")
+parser.add_argument("--api_id", metavar="api_id", required=True, help="Telegram API ID")
+parser.add_argument(
+    "--api_hash", metavar="api_hash", required=True, help="Telegram API hash"
+)
 args = parser.parse_args()
 
 api_id = int(args.api_id)
@@ -45,17 +45,33 @@ MAX_PER_COOLDOWN_PERIOD = 300
 cooldown_start = 0
 count_since_cooldown_start = 0
 
-user_client = TelegramClient('frog_killer_session', api_id, api_hash)
+user_client = TelegramClient("frog_killer_session", api_id, api_hash)
 
 foreign_shit_message_ids = dict()
 
-yasru_filter = re.compile('#я[сc][рp][уy]', re.IGNORECASE)
+yasru_filter = re.compile("#я[сc][рp][уy]", re.IGNORECASE)
 
 nous_list = ["لاانت", "לא אתה"]
-nos_list = ["n0", "no", "nei", "nay", "nah", "nö", "nein", "нет", "nope", "nop", "nada", "nah", "yox", "heyir", "hayir",
-            "ba"]
+nos_list = [
+    "n0",
+    "no",
+    "nei",
+    "nay",
+    "nah",
+    "nö",
+    "nein",
+    "нет",
+    "nope",
+    "nop",
+    "nada",
+    "nah",
+    "yox",
+    "heyir",
+    "hayir",
+    "ba",
+]
 yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu"]
-breaks_list = [",", ".", "-", " ", "\n", "!", "?", "\"", "\'", ";", ":", "_"]
+breaks_list = [",", ".", "-", " ", "\n", "!", "?", '"', "'", ";", ":", "_"]
 
 
 def re_encode(strs):
@@ -63,7 +79,7 @@ def re_encode(strs):
 
 
 breaks_list = re_encode(breaks_list)
-breaks_regex = re.compile("[" + ''.join(breaks_list) + "]")
+breaks_regex = re.compile("[" + "".join(breaks_list) + "]")
 
 
 def normalize(text):
@@ -90,12 +106,14 @@ nous_list = re_encode_normalize(nous_list)
 nos_list = re_encode_normalize(nos_list)
 yous_list = re_encode_normalize(yous_list)
 
-nous_regex = '|'.join(nous_list)
-nos_regex = '|'.join(nos_list)
-yous_regex = '|'.join(yous_list)
-clean_str_regex = re.compile("^(((" + nos_regex + ")(" + yous_regex + "))|(" + nous_regex + "))$")
+nous_regex = "|".join(nous_list)
+nos_regex = "|".join(nos_list)
+yous_regex = "|".join(yous_list)
+clean_str_regex = re.compile(
+    "^(((" + nos_regex + ")(" + yous_regex + "))|(" + nous_regex + "))$"
+)
 
-cat_url = 'https://some-random-api.ml/img/cat'
+cat_url = "https://some-random-api.ml/img/cat"
 
 
 def is_nou(message_srt):
@@ -110,19 +128,28 @@ async def handler(event):
     # Log all deleted message IDs
     for msg_id in event.deleted_ids:
         if msg_id in foreign_shit_message_ids:
-            print('foreign_shit_message_ids:', msg_id, 'was deleted in', event.chat_id)
-            to_delete_msg = await user_client.get_messages(event.chat_id,
-                                                           ids=foreign_shit_message_ids[msg_id])
+            print("foreign_shit_message_ids:", msg_id, "was deleted in", event.chat_id)
+            to_delete_msg = await user_client.get_messages(
+                event.chat_id, ids=foreign_shit_message_ids[msg_id]
+            )
             if to_delete_msg.message.lower() == "#йееей":
-                print('foreign_shit_message_ids:', msg_id, 'was deleted in', event.chat_id, "; confirmed text; del")
-                await user_client.delete_messages(event.chat_id, [foreign_shit_message_ids.pop(msg_id)])
+                print(
+                    "foreign_shit_message_ids:",
+                    msg_id,
+                    "was deleted in",
+                    event.chat_id,
+                    "; confirmed text; del",
+                )
+                await user_client.delete_messages(
+                    event.chat_id, [foreign_shit_message_ids.pop(msg_id)]
+                )
 
 
 def cooldown():
     global cooldown_start
     global count_since_cooldown_start
 
-    print(F"{cooldown_start}, {count_since_cooldown_start}")
+    print(f"{cooldown_start}, {count_since_cooldown_start}")
 
     result = False
 
@@ -141,21 +168,37 @@ def cooldown():
 async def handler(event):
     sender = await event.get_sender()
 
-    if yasru_filter.match(event.message.message.lower()) and isinstance(sender, User) and not sender.is_self:
+    if (
+        yasru_filter.match(event.message.message.lower())
+        and isinstance(sender, User)
+        and not sender.is_self
+    ):
         print("foreign shit event detected")
         # reply_msg = await event.reply('#йееей')
         # foreign_shit_message_ids[event.message.id] = reply_msg.id
 
-    if event.message.file is not None and event.message.file.mime_type == 'video/webm' and \
-            ((isinstance(sender,
-                         Channel) and sender.admin_rights.post_messages and sender.admin_rights.delete_messages)
-             or (isinstance(sender, User) and sender.is_self)):
+    if (
+        event.message.file is not None
+        and event.message.file.mime_type == "video/webm"
+        and (
+            (
+                isinstance(sender, Channel)
+                and sender.admin_rights.post_messages
+                and sender.admin_rights.delete_messages
+            )
+            or (isinstance(sender, User) and sender.is_self)
+        )
+    ):
         print("webm self event detected")
-        tmp_filename = 'tmp' + str(random()) + '.webm'
+        tmp_filename = "tmp" + str(random()) + ".webm"
         await user_client.download_file(event.message, file=tmp_filename)
-        await user_client.delete_messages(entity=event.chat_id, message_ids=[event.message.id])
-        os.system("ffmpeg -i " + tmp_filename + " -movflags faststart -pix_fmt yuv420p -vf"
-                                                " \"scale=trunc(iw/2)*2:trunc(ih/2)*2\" " + tmp_filename + ".mp4")
+        await user_client.delete_messages(
+            entity=event.chat_id, message_ids=[event.message.id]
+        )
+        os.system(
+            "ffmpeg -i " + tmp_filename + " -movflags faststart -pix_fmt yuv420p -vf"
+            ' "scale=trunc(iw/2)*2:trunc(ih/2)*2" ' + tmp_filename + ".mp4"
+        )
         await user_client.send_file(entity=event.chat_id, file=tmp_filename + ".mp4")
         os.remove(tmp_filename)
         os.remove(tmp_filename + ".mp4")
@@ -163,23 +206,23 @@ async def handler(event):
     if is_nou(event.message.message):
         if cooldown():
             print("No u")
-            await event.reply('No u')
+            await event.reply("No u")
 
-    if event.message.message == 'getPussy()':
+    if event.message.message == "getPussy()":
         if cooldown():
             cat_link = json.loads(requests.get(cat_url).text)["link"]
             filename = cat_link.split("/")[-1] + ".jpeg"
             r = requests.get(cat_link, stream=True)
             if r.status_code == 200:
                 r.raw.decode_content = True
-                with open(filename, 'wb') as f:
+                with open(filename, "wb") as f:
                     shutil.copyfileobj(r.raw, f)
                 await event.reply(file=filename)
                 os.remove(filename)
 
 
 async def user_main():
-    await user_client.send_message('me', 'Hello, myself!')
+    await user_client.send_message("me", "Hello, myself!")
 
 
 with user_client:
