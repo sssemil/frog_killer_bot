@@ -69,6 +69,7 @@ nos_list = [
     "heyir",
     "hayir",
     "ba",
+    "na",
 ]
 yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu"]
 breaks_list = [",", ".", "-", " ", "\n", "!", "?", '"', "'", ";", ":", "_"]
