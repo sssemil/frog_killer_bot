@@ -53,7 +53,6 @@ yasru_filter = re.compile("#я[сc][рp][уy]", re.IGNORECASE)
 
 nous_list = ["لاانت", "לא אתה"]
 nos_list = [
-    "n0",
     "no",
     "nei",
     "nay",
@@ -73,6 +72,7 @@ nos_list = [
 ]
 yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu"]
 breaks_list = [",", ".", "-", " ", "\n", "!", "?", '"', "'", ";", ":", "_"]
+digits_to_letters_map = {'0': 'o'}
 
 
 def re_encode(strs):
@@ -88,6 +88,9 @@ def normalize(text):
     text = text.lower()
     # remove the break chars
     text = breaks_regex.sub("", text)
+    # map digits to letters just in case
+    for (digit, letter) in digits_to_letters_map:
+        text = text.replace(digit, letter)
     # collapse duplicates
     tmp_message_srt = ""
     last_c = ""
@@ -170,25 +173,25 @@ async def handler(event):
     sender = await event.get_sender()
 
     if (
-        yasru_filter.match(event.message.message.lower())
-        and isinstance(sender, User)
-        and not sender.is_self
+            yasru_filter.match(event.message.message.lower())
+            and isinstance(sender, User)
+            and not sender.is_self
     ):
         print("foreign shit event detected")
         # reply_msg = await event.reply('#йееей')
         # foreign_shit_message_ids[event.message.id] = reply_msg.id
 
     if (
-        event.message.file is not None
-        and event.message.file.mime_type == "video/webm"
-        and (
+            event.message.file is not None
+            and event.message.file.mime_type == "video/webm"
+            and (
             (
-                isinstance(sender, Channel)
-                and sender.admin_rights.post_messages
-                and sender.admin_rights.delete_messages
+                    isinstance(sender, Channel)
+                    and sender.admin_rights.post_messages
+                    and sender.admin_rights.delete_messages
             )
             or (isinstance(sender, User) and sender.is_self)
-        )
+    )
     ):
         print("webm self event detected")
         tmp_filename = "tmp" + str(random()) + ".webm"
@@ -198,7 +201,7 @@ async def handler(event):
         )
         os.system(
             "ffmpeg -i " + tmp_filename + " -movflags faststart -pix_fmt yuv420p -vf"
-            ' "scale=trunc(iw/2)*2:trunc(ih/2)*2" ' + tmp_filename + ".mp4"
+                                          ' "scale=trunc(iw/2)*2:trunc(ih/2)*2" ' + tmp_filename + ".mp4"
         )
         await user_client.send_file(entity=event.chat_id, file=tmp_filename + ".mp4")
         os.remove(tmp_filename)
