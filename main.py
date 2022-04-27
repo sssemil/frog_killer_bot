@@ -55,6 +55,7 @@ nous_list = ["لاانت", "לא אתה"]
 nos_list = [
     "no",
     "nei",
+    "ne",
     "nay",
     "nah",
     "nö",
@@ -69,8 +70,9 @@ nos_list = [
     "hayir",
     "ba",
     "na",
+    "ні"
 ]
-yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu"]
+yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu", "ти", "thou"]
 breaks_list = [",", ".", "-", " ", "\n", "!", "?", '"', "'", ";", ":", "_"]
 digits_to_letters_map = {'0': 'o'}
 
