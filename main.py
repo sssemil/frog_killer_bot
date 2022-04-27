@@ -91,7 +91,7 @@ def normalize(text):
     # remove the break chars
     text = breaks_regex.sub("", text)
     # map digits to letters just in case
-    for (digit, letter) in digits_to_letters_map:
+    for (digit, letter) in digits_to_letters_map.items():
         text = text.replace(digit, letter)
     # collapse duplicates
     tmp_message_srt = ""
