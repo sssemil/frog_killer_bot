@@ -34,13 +34,20 @@ parser.add_argument("--api_id", metavar="api_id", required=True, help="Telegram 
 parser.add_argument(
     "--api_hash", metavar="api_hash", required=True, help="Telegram API hash"
 )
+parser.add_argument(
+    "--cooldown_count", metavar="cooldown_count", required=True, help="How many messages per period"
+)
+parser.add_argument(
+    "--cooldown_period", metavar="cooldown_period", required=True,
+    help="Length of a cooldown period (both duration and measurements time frame) in seconds"
+)
 args = parser.parse_args()
 
 api_id = int(args.api_id)
 api_hash = args.api_hash
 
-COOLDOWN_S = 60
-MAX_PER_COOLDOWN_PERIOD = 300
+COOLDOWN_S = int(args.cooldown_period)
+MAX_PER_COOLDOWN_PERIOD = int(args.cooldown_count)
 
 cooldown_start = 0
 count_since_cooldown_start = 0
