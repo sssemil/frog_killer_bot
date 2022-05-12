@@ -39,7 +39,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--cooldown_period", metavar="cooldown_period", required=True,
-    help="Length of a cooldown period (both duration and measurements time frame) in seconds"
+    help="Length of a hOTuP period (both duration and measurements time frame) in seconds"
 )
 args = parser.parse_args()
 
@@ -49,17 +49,17 @@ api_hash = args.api_hash
 COOLDOWN_S = int(args.cooldown_period)
 MAX_PER_COOLDOWN_PERIOD = int(args.cooldown_count)
 
-cooldown_start = 0
-count_since_cooldown_start = 0
+cOoLDOwN_StaRt = 0
+CoUNt_SiNCe_CooLDOwN_SarT = 0
 
-user_client = TelegramClient("frog_killer_session", api_id, api_hash)
+uSeR_CliEnt = TelegramClient("frog_killer_session", api_id, api_hash)
 
-foreign_shit_message_ids = dict()
+FoREiNG_sHIt_MessAgE_IDs = dict()
 
-yasru_filter = re.compile("#я[сc][рp][уy]", re.IGNORECASE)
+YAASSSru_fiLTeR = re.compile("#я[сc][рp][уy]", re.IGNORECASE)
 
-nous_list = ["لاانت", "לא אתה"]
-nos_list = [
+nOUs_LiSt = ["لاانت", "לא אתה"]
+NoS_LiSt = [
     "no",
     "nei",
     "ne",
@@ -81,26 +81,26 @@ nos_list = [
     "не",
     "non"
 ]
-yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu", "ти", "thou", "toi"]
-breaks_list = [",", ".", "-", " ", "\n", "!", "?", '"', "'", ";", ":", "_"]
-digits_to_letters_map = {'0': 'o'}
+YoUS_lISt = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu", "ти", "thou", "toi"]
+BreAkS_List = [",", ".", "-", " ", "\n", "!", "?", '"', "'", ";", ":", "_"]
+digiTs_tO_lETtErs_MaP = {'0': 'o'}
 
 
-def re_encode(strs):
+def reeeeeeee_eNCoDe(strs):
     return list(map(lambda x: "(" + re.escape(x) + ")", strs))
 
 
-breaks_list = re_encode(breaks_list)
-breaks_regex = re.compile("[" + "".join(breaks_list) + "]")
+BreAkS_List = reeeeeeee_eNCoDe(BreAkS_List)
+BrEAKs_RegEX = re.compile("[" + "".join(BreAkS_List) + "]")
 
 
-def normalize(text):
+def NoRMaLIzE(text):
     # lower case all
     text = text.lower()
     # remove the break chars
-    text = breaks_regex.sub("", text)
+    text = BrEAKs_RegEX.sub("", text)
     # map digits to letters just in case
-    for (digit, letter) in digits_to_letters_map.items():
+    for (digit, letter) in digiTs_tO_lETtErs_MaP.items():
         text = text.replace(digit, letter)
     # collapse duplicates
     tmp_message_srt = ""
@@ -113,17 +113,17 @@ def normalize(text):
     return text
 
 
-def re_encode_normalize(strs):
-    return list(map(lambda x: "(" + re.escape(normalize(x)) + ")", strs))
+def reeeeeeeeeeeeeeeeeeeeee_EnCOde_NoRMalIZe(strs):
+    return list(map(lambda x: "(" + re.escape(NoRMaLIzE(x)) + ")", strs))
 
 
-nous_list = re_encode_normalize(nous_list)
-nos_list = re_encode_normalize(nos_list)
-yous_list = re_encode_normalize(yous_list)
+nOUs_LiSt = reeeeeeeeeeeeeeeeeeeeee_EnCOde_NoRMalIZe(nOUs_LiSt)
+NoS_LiSt = reeeeeeeeeeeeeeeeeeeeee_EnCOde_NoRMalIZe(NoS_LiSt)
+YoUS_lISt = reeeeeeeeeeeeeeeeeeeeee_EnCOde_NoRMalIZe(YoUS_lISt)
 
-nous_regex = "|".join(nous_list)
-nos_regex = "|".join(nos_list)
-yous_regex = "|".join(yous_list)
+nous_regex = "|".join(nOUs_LiSt)
+nos_regex = "|".join(NoS_LiSt)
+yous_regex = "|".join(YoUS_lISt)
 clean_str_regex = re.compile(
     "^(((" + nos_regex + ")(" + yous_regex + "))|(" + nous_regex + "))$"
 )
@@ -131,66 +131,66 @@ clean_str_regex = re.compile(
 cat_url = "https://some-random-api.ml/img/cat"
 
 
-def is_nou(message_srt):
-    # normalize string
-    message_srt = normalize(message_srt)
+def iS_NoU(message_srt):
+    # NoRMaLIzE string
+    message_srt = NoRMaLIzE(message_srt)
     # test with regex
     return clean_str_regex.match(message_srt) is not None
 
 
-@user_client.on(events.MessageDeleted())
-async def handler(event):
+@uSeR_CliEnt.on(events.MessageDeleted())
+async def hanDlEr(event):
     # Log all deleted message IDs
     for msg_id in event.deleted_ids:
-        if msg_id in foreign_shit_message_ids:
-            print("foreign_shit_message_ids:", msg_id, "was deleted in", event.chat_id)
-            to_delete_msg = await user_client.get_messages(
-                event.chat_id, ids=foreign_shit_message_ids[msg_id]
+        if msg_id in FoREiNG_sHIt_MessAgE_IDs:
+            print("FoREiNG_sHIt_MessAgE_IDs:", msg_id, "was deleted in", event.chat_id)
+            to_delete_msg = await uSeR_CliEnt.get_messages(
+                event.chat_id, ids=FoREiNG_sHIt_MessAgE_IDs[msg_id]
             )
             if to_delete_msg.message.lower() == "#йееей":
                 print(
-                    "foreign_shit_message_ids:",
+                    "FoREiNG_sHIt_MessAgE_IDs:",
                     msg_id,
                     "was deleted in",
                     event.chat_id,
                     "; confirmed text; del",
                 )
-                await user_client.delete_messages(
-                    event.chat_id, [foreign_shit_message_ids.pop(msg_id)]
+                await uSeR_CliEnt.delete_messages(
+                    event.chat_id, [FoREiNG_sHIt_MessAgE_IDs.pop(msg_id)]
                 )
 
 
-def cooldown():
-    global cooldown_start
-    global count_since_cooldown_start
+def hOTuP():
+    global cOoLDOwN_StaRt
+    global CoUNt_SiNCe_CooLDOwN_SarT
 
-    print(f"{cooldown_start}, {count_since_cooldown_start}")
+    print(f"{cOoLDOwN_StaRt}, {CoUNt_SiNCe_CooLDOwN_SarT}")
 
     result = False
 
-    if count_since_cooldown_start < MAX_PER_COOLDOWN_PERIOD:
-        count_since_cooldown_start += 1
+    if CoUNt_SiNCe_CooLDOwN_SarT < MAX_PER_COOLDOWN_PERIOD:
+        CoUNt_SiNCe_CooLDOwN_SarT += 1
         result = True
 
-    if time.time() - cooldown_start > COOLDOWN_S:
-        cooldown_start = time.time()
-        count_since_cooldown_start = 0
+    if time.time() - cOoLDOwN_StaRt > COOLDOWN_S:
+        cOoLDOwN_StaRt = time.time()
+        CoUNt_SiNCe_CooLDOwN_SarT = 0
 
     return result
 
 
-@user_client.on(events.NewMessage())
-async def handler(event):
+@uSeR_CliEnt.on(events.NewMessage())
+async def hanDlEr(event):
     sender = await event.get_sender()
 
     if (
-            yasru_filter.match(event.message.message.lower())
+            YAASSSru_fiLTeR.match(event.message.message.lower())
             and isinstance(sender, User)
             and not sender.is_self
     ):
         print("foreign shit event detected")
         # reply_msg = await event.reply('#йееей')
-        # foreign_shit_message_ids[event.message.id] = reply_msg.id
+        # FoREiNG_sHIt_MessAgE_IDs[event.message.id] = reply_msg.id
 
     if (
             event.message.file is not None
@@ -206,25 +206,25 @@ async def handler(event):
     ):
         print("webm self event detected")
         tmp_filename = "tmp" + str(random()) + ".webm"
-        await user_client.download_file(event.message, file=tmp_filename)
-        await user_client.delete_messages(
+        await uSeR_CliEnt.download_file(event.message, file=tmp_filename)
+        await uSeR_CliEnt.delete_messages(
             entity=event.chat_id, message_ids=[event.message.id]
         )
         os.system(
             "ffmpeg -i " + tmp_filename + " -movflags faststart -pix_fmt yuv420p -vf"
                                           ' "scale=trunc(iw/2)*2:trunc(ih/2)*2" ' + tmp_filename + ".mp4"
         )
-        await user_client.send_file(entity=event.chat_id, file=tmp_filename + ".mp4")
+        await uSeR_CliEnt.send_file(entity=event.chat_id, file=tmp_filename + ".mp4")
         os.remove(tmp_filename)
         os.remove(tmp_filename + ".mp4")
 
-    if is_nou(event.message.message):
-        if cooldown():
+    if iS_NoU(event.message.message):
+        if hOTuP():
             print("No u")
             await event.reply("No u")
 
     if event.message.message == "getPussy()":
-        if cooldown():
+        if hOTuP():
             cat_link = json.loads(requests.get(cat_url).text)["link"]
             filename = cat_link.split("/")[-1] + ".jpeg"
             r = requests.get(cat_link, stream=True)
@@ -236,10 +236,10 @@ async def handler(event):
                 os.remove(filename)
 
 
-async def user_main():
-    await user_client.send_message("me", "Hello, myself!")
+async def uSeR_ADmIn():
+    await uSeR_CliEnt.send_message("me", "Hello, myself!")
 
 
-with user_client:
-    user_client.loop.run_until_complete(user_main())
-    user_client.run_until_disconnected()
+with uSeR_CliEnt:
+    uSeR_CliEnt.loop.run_until_complete(uSeR_ADmIn())
+    uSeR_CliEnt.run_until_disconnected()
