@@ -41,6 +41,14 @@ parser.add_argument(
     "--cooldown_period", metavar="cooldown_period", required=True,
     help="Length of a cooldown period (both duration and measurements time frame) in seconds"
 )
+parser.add_argument(
+    "--per_user_cooldown_count", metavar="per_user_cooldown_count", required=True,
+    help="How many messages per period per user"
+)
+parser.add_argument(
+    "--per_user_cooldown_period", metavar="per_user_cooldown_period", required=True,
+    help="Length of a cooldown period (both duration and measurements time frame) in seconds (per user case)"
+)
 args = parser.parse_args()
 
 api_id = int(args.api_id)
@@ -49,8 +57,14 @@ api_hash = args.api_hash
 COOLDOWN_S = int(args.cooldown_period)
 MAX_PER_COOLDOWN_PERIOD = int(args.cooldown_count)
 
+PER_USER_COOLDOWN_S = int(args.per_user_cooldown_period)
+PER_USER_MAX_PER_COOLDOWN_PERIOD = int(args.per_user_cooldown_count)
+
 cooldown_start = 0
 count_since_cooldown_start = 0
+
+per_user_cooldown_start = {}
+per_user_count_since_cooldown_start = {}
 
 user_client = TelegramClient("frog_killer_session", api_id, api_hash)
 
@@ -164,7 +178,7 @@ def cooldown():
     global cooldown_start
     global count_since_cooldown_start
 
-    print(f"{cooldown_start}, {count_since_cooldown_start}")
+    print(f"GB: {cooldown_start}, {count_since_cooldown_start}")
 
     result = False
 
@@ -175,6 +189,33 @@ def cooldown():
     if time.time() - cooldown_start > COOLDOWN_S:
         cooldown_start = time.time()
         count_since_cooldown_start = 0
+
+    return result
+
+
+def per_user_cooldown(user):
+    if user is None:
+        return False
+
+    global per_user_cooldown_start
+    global per_user_count_since_cooldown_start
+
+    if user not in per_user_cooldown_start:
+        per_user_cooldown_start[user] = 0
+    if user not in per_user_count_since_cooldown_start:
+        per_user_count_since_cooldown_start[user] = 0
+
+    print(f"PU: {per_user_cooldown_start[user]}, {per_user_count_since_cooldown_start[user]}")
+
+    result = False
+
+    if per_user_count_since_cooldown_start[user] < PER_USER_MAX_PER_COOLDOWN_PERIOD:
+        per_user_count_since_cooldown_start[user] += 1
+        result = True
+
+    if time.time() - per_user_cooldown_start[user] > PER_USER_COOLDOWN_S:
+        per_user_cooldown_start[user] = time.time()
+        per_user_count_since_cooldown_start[user] = 0
 
     return result
 
@@ -224,7 +265,7 @@ async def handler(event):
             await event.reply("No u")
 
     if event.message.message == "getPussy()":
-        if cooldown():
+        if cooldown() and per_user_cooldown((await event.get_sender()).id):
             cat_link = json.loads(requests.get(cat_url).text)["link"]
             filename = cat_link.split("/")[-1] + ".jpeg"
             r = requests.get(cat_link, stream=True)
