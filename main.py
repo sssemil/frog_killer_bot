@@ -182,7 +182,7 @@ def cooldown():
 
     result = False
 
-    if count_since_cooldown_start < MAX_PER_COOLDOWN_PERIOD:
+    if count_since_cooldown_start <= MAX_PER_COOLDOWN_PERIOD:
         count_since_cooldown_start += 1
         result = True
 
@@ -209,7 +209,7 @@ def per_user_cooldown(user):
 
     result = False
 
-    if per_user_count_since_cooldown_start[user] < PER_USER_MAX_PER_COOLDOWN_PERIOD:
+    if per_user_count_since_cooldown_start[user] <= PER_USER_MAX_PER_COOLDOWN_PERIOD:
         per_user_count_since_cooldown_start[user] += 1
         result = True
 
@@ -260,7 +260,7 @@ async def handler(event):
         os.remove(tmp_filename + ".mp4")
 
     if is_nou(event.message.message):
-        if cooldown():
+        if cooldown() and per_user_cooldown((await event.get_sender()).id):
             print("No u")
             await event.reply("No u")
 
