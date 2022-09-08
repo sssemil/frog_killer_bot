@@ -260,8 +260,8 @@ async def handler(event):
         os.remove(tmp_filename + ".mp4")
 
     if is_nou(event.message.message):
-        if cooldown() and per_user_cooldown((await event.get_sender()).id):
-            print("No u")
+        if cooldown() and per_user_cooldown(sender.id):
+            print(F"Detected a 'No u' from '{sender.username}'")
             await event.reply("No u")
 
     if event.message.message == "getPussy()":
