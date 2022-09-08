@@ -236,6 +236,7 @@ async def handler(event):
     if (
             event.message.file is not None
             and event.message.file.mime_type == "video/webm"
+            and event.message.file.emoji is None
             and (
             (
                     isinstance(sender, Channel)
