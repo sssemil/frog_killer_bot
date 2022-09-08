@@ -262,8 +262,16 @@ async def handler(event):
 
     if is_nou(event.message.message):
         if cooldown() and per_user_cooldown(sender.id):
-            print(F"Detected a 'No u' from '{sender.username}'")
-            await event.reply("No u")
+            if not (
+                    (
+                            isinstance(sender, Channel)
+                            and sender.admin_rights.post_messages
+                            and sender.admin_rights.delete_messages
+                    )
+                    or (isinstance(sender, User) and sender.is_self)
+            ):
+                print(F"Detected a 'No u' from '{sender.username}'")
+                await event.reply("No u")
 
     if event.message.message == "getPussy()":
         if cooldown() and per_user_cooldown((await event.get_sender()).id):
