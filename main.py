@@ -19,10 +19,10 @@
 import argparse
 import json
 import os
+import random
 import re
 import shutil
 import time
-from random import random
 
 import requests
 from telethon import TelegramClient
@@ -239,11 +239,11 @@ def re_encode_normalize(strs):
     return list(map(lambda x: "(" + re.escape(normalize(x)) + ")", strs))
 
 
-nous_list = re_encode_normalize(nous_list)
+nous_list_norm = re_encode_normalize(nous_list)
 nos_list = re_encode_normalize(nos_list)
 yous_list = re_encode_normalize(yous_list)
 
-nous_regex = "|".join(nous_list)
+nous_regex = "|".join(nous_list_norm)
 nos_regex = "|".join(nos_list)
 yous_regex = "|".join(yous_list)
 clean_str_regex = re.compile(
@@ -355,7 +355,7 @@ async def handler(event):
     )
     ):
         print("webm self event detected")
-        tmp_filename = "tmp" + str(random()) + ".webm"
+        tmp_filename = "tmp" + str(random.random()) + ".webm"
         await user_client.download_file(event.message, file=tmp_filename)
         await user_client.delete_messages(
             entity=event.chat_id, message_ids=[event.message.id]
@@ -379,7 +379,7 @@ async def handler(event):
                     or (isinstance(sender, User) and sender.is_self)
             ):
                 print(F"Detected a 'No u' from '{sender.username}'")
-                await event.reply("No u")
+                await event.reply(random.choice(nous_list))
 
     if event.message.message == "getPussy()":
         if cooldown() and per_user_cooldown((await event.get_sender()).id):
