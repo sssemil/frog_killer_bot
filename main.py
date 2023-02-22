@@ -202,9 +202,10 @@ nos_list = [
     "na",
     "ні",
     "не",
-    "non"
+    "non",
+    "𝒩𝑜"
 ]
-yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu", "ти", "thou", "toi"]
+yous_list = ["you", "u", "ye", "du", "ты", "sən", "sen", "tu", "ти", "thou", "toi", "𝒴𝑜𝓊"]
 breaks_list = [",", ".", "-", " ", "\n", "!", "?", '"', "'", ";", ":", "_"]
 digits_to_letters_map = {'0': 'o'}
 
