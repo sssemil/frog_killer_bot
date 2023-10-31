@@ -151,7 +151,7 @@ nous_list = {
     "pt": "Você não",
     "pa": "ਨਹੀਂ ਤੁਸੀਂ",
     "ro": "Nu tu",
-    "ru": "Не ты",
+    "ru": "Нет ты",
     "sm": "Leai oe",
     "gd": "Chan eil thu",
     "sr": "Не ти",
